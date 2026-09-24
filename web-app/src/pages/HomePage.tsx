@@ -1,13 +1,15 @@
-import { Box, Button, Flex, Heading, Stack, Text } from "@chakra-ui/react"
+import { Box, Button, Flex, Heading, Spinner, Stack, Text } from "@chakra-ui/react"
 import { LuPlus } from "react-icons/lu"
 import { useNavigate } from "react-router"
 import type { Transaction } from "../types"
 
 type Props = {
   transactions: Transaction[]
+  isLoading: boolean
+  error: string | null
 }
 
-function HomePage({ transactions }: Props) {
+function HomePage({ transactions, isLoading, error }: Props) {
   const navigate = useNavigate()
 
   const incomes = transactions.filter((t) => t.type === "income")
@@ -26,8 +28,18 @@ function HomePage({ transactions }: Props) {
         </Button>
       </Flex>
 
-      <TransactionSection title="収入履歴" transactions={incomes} />
-      <TransactionSection title="支出履歴" transactions={expenses} />
+      {isLoading ? (
+        <Flex justify="center">
+          <Spinner color="teal.500" />
+        </Flex>
+      ) : error ? (
+        <Text color="red.500">{error}</Text>
+      ) : (
+        <>
+          <TransactionSection title="収入履歴" transactions={incomes} />
+          <TransactionSection title="支出履歴" transactions={expenses} />
+        </>
+      )}
     </Stack>
   )
 }

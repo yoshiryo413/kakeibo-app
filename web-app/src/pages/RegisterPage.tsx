@@ -8,9 +8,10 @@ import {
   Input,
   RadioGroup,
   Stack,
+  Text,
 } from "@chakra-ui/react"
 import { useNavigate } from "react-router"
-import type { Transaction, TransactionType } from "../types"
+import type { NewTransaction, TransactionType } from "../types"
 
 const types = [
   { value: "expense", label: "支出" },
@@ -18,7 +19,7 @@ const types = [
 ]
 
 type Props = {
-  onRegister: (transaction: Transaction) => void
+  onRegister: (transaction: NewTransaction) => Promise<void>
 }
 
 function RegisterPage({ onRegister }: Props) {
@@ -27,18 +28,27 @@ function RegisterPage({ onRegister }: Props) {
   const [item, setItem] = useState("")
   const [amount, setAmount] = useState("")
   const [date, setDate] = useState("")
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const canRegister = item !== "" && Number(amount) > 0 && date !== ""
 
-  const handleRegister = () => {
-    onRegister({
-      id: crypto.randomUUID(),
-      type,
-      item,
-      amount: Number(amount),
-      date,
-    })
-    navigate("/")
+  const handleRegister = async () => {
+    setIsSubmitting(true)
+    setError(null)
+    try {
+      await onRegister({
+        type,
+        item,
+        amount: Number(amount),
+        date,
+      })
+      navigate("/")
+    } catch (e) {
+      setError(e instanceof Error ? e.message : String(e))
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -89,6 +99,8 @@ function RegisterPage({ onRegister }: Props) {
         />
       </Field.Root>
 
+      {error && <Text color="red.500">{error}</Text>}
+
       <Flex justify="flex-end" gap={3}>
         <Button variant="outline" onClick={() => navigate("/")}>
           キャンセル
@@ -97,6 +109,7 @@ function RegisterPage({ onRegister }: Props) {
           colorPalette="teal"
           fontWeight="bold"
           disabled={!canRegister}
+          loading={isSubmitting}
           onClick={handleRegister}
         >
           登録
