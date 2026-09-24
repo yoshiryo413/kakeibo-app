@@ -1,10 +1,12 @@
+import { Button, Heading } from "@chakra-ui/react"
 
 function App() {
 
 
   return (
     <>
-      <h1>Hello World</h1>
+    <Heading>シンプル家計簿</Heading>
+    <Button colorPalette="teal" fontWeight="bold">登録</Button>
     </>
   )
 }
