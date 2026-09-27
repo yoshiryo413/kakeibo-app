@@ -32,12 +32,10 @@ function App() {
   }, [])
 
   const addTransaction = async (transaction: NewTransaction) => {
-    const created = await createTransaction(transaction)
-    // DB 未実装でレスポンスに id が無い場合は、仮の id を付与する
-    setTransactions((prev) => [
-      ...prev,
-      { ...created, id: created.id ?? crypto.randomUUID() },
-    ])
+    await createTransaction(transaction)
+    // 登録後に一覧を取り直し、DB の並び順（日付の新しい順）に揃える
+    const data = await fetchTransactions("all")
+    setTransactions(data.transactions)
   }
 
   return (
