@@ -18,10 +18,10 @@ export async function fetchTransactions(
   return res.json()
 }
 
-// 取引を登録する（DB 未実装のため、レスポンスに id が含まれない場合がある）
+// 取引を登録する（レスポンスには DB で採番された id が含まれる）
 export async function createTransaction(
   transaction: NewTransaction,
-): Promise<NewTransaction & { id?: Transaction["id"] }> {
+): Promise<Transaction> {
   const res = await fetch(`${API_BASE_URL}/transactions`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },

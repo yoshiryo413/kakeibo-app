@@ -9,10 +9,12 @@
   "dependencies": {
     "@hono/node-server": "^2.1.1",
     "dotenv": "^18.0.3",
-    "hono": "^4.13.9"
+    "hono": "^4.13.9",
+    "pg": "^8.23.0"
   },
   "devDependencies": {
     "@types/node": "^26.1.1",
+    "@types/pg": "^8.23.1",
     "tsx": "^4.23.0",
     "typescript": "^7.0.2"
   }
